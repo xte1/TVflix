@@ -1,42 +1,46 @@
-name: Build TV Flix IPA
+name: Build Unsigned IPA
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  build-ios-ipa:
+  build:
     runs-on: macos-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Java
-        uses: actions/setup-java@v3
+      - name: Set up Java Development Kit (JDK)
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Set up Flutter
+      - name: Set up Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.x'
           channel: 'stable'
+          cache: true
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build Unsigned IPA
+      - name: Generate iOS Project & Install Dependencies
         run: |
-          flutter build ios --release --no-codesign
-          mkdir -p Payload
-          mv build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app Payload/
-          zip -r TVFlix.ipa Payload
+          flutter create . --platforms=ios
+          flutter pub get
 
-      - name: Upload Unsigned IPA
+      - name: Build iOS App (Unsigned)
+        run: flutter build ios --release --no-codesign
+
+      - name: Package Payload to IPA
+        run: |
+          mkdir -p Payload
+          mv build/ios/iphoneos/Runner.app Payload/
+          zip -r TVflix_unsigned.ipa Payload
+
+      - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TVFlix-Unsigned
-          path: TVFlix.ipa
+          name: TVflix-Unsigned-IPA
+          path: TVflix_unsigned.ipa
