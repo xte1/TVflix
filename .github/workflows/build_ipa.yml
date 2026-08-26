@@ -25,18 +25,19 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Generate iOS Project & Install Dependencies
+      - name: Generate iOS Project & Get Dependencies
         run: |
           flutter create . --platforms=ios
           flutter pub get
 
-      - name: Build iOS App (Unsigned)
-        run: flutter build ios --release --no-codesign
+      - name: Build Unsigned App
+        run: |
+          flutter build ios --release --simulator --no-codesign
 
       - name: Package Payload to IPA
         run: |
           mkdir -p Payload
-          mv build/ios/iphoneos/Runner.app Payload/
+          cp -r build/ios/iphonesimulator/Runner.app Payload/
           zip -r TVflix_unsigned.ipa Payload
 
       - name: Upload IPA Artifact
