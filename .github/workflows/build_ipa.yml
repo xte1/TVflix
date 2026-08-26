@@ -30,14 +30,20 @@ jobs:
           flutter create . --platforms=ios
           flutter pub get
 
-      - name: Build Unsigned App
+      - name: Bypass Xcode Signing Requirement
         run: |
-          flutter build ios --release --simulator --no-codesign
+          echo "CODE_SIGNING_ALLOWED=NO" >> ios/Flutter/Release.xcconfig
+          echo "CODE_SIGNING_REQUIRED=NO" >> ios/Flutter/Release.xcconfig
+          echo "CODE_SIGN_IDENTITY=" >> ios/Flutter/Release.xcconfig
+          echo "DEVELOPMENT_TEAM=1234567890" >> ios/Flutter/Release.xcconfig
+
+      - name: Build iOS App (Unsigned)
+        run: flutter build ios --release --no-codesign
 
       - name: Package Payload to IPA
         run: |
           mkdir -p Payload
-          cp -r build/ios/iphonesimulator/Runner.app Payload/
+          cp -r build/ios/iphoneos/Runner.app Payload/
           zip -r TVflix_unsigned.ipa Payload
 
       - name: Upload IPA Artifact
