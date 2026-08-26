@@ -94,7 +94,7 @@ class HomeScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Banner الرئيسي
             Container(
@@ -129,8 +129,10 @@ class HomeScreen extends StatelessWidget {
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-              child: Text('الأفلام الأكثر مشاهدة'),
+              child: Text(
+                'الأفلام الأكثر مشاهدة',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
             ),
             // قائمة الأفلام
             GridView.builder(
@@ -151,7 +153,7 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: ClipRRect(
